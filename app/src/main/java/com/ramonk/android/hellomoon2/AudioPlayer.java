@@ -8,21 +8,31 @@ import android.media.MediaPlayer;
  */
 public class AudioPlayer {
     private MediaPlayer mPlayer;
+    private int point;
 
-    public void stop(){
+    public void stop() {
         if (mPlayer != null) {
             mPlayer.release();
             mPlayer = null;
         }
     }
 
-    public void play(Context c){
+    public void play(Context c) {
         stop();
+
         mPlayer = MediaPlayer.create(c, R.raw.one_small_step);
+
+        if (point != 0) {
+            mPlayer.start();
+            mPlayer.seekTo(point);
+
+        }
+
         mPlayer.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
 
             public void onCompletion(MediaPlayer mediaPlayer) {
                 stop();
+                point = 0;
             }
         });
         mPlayer.start();
@@ -30,6 +40,8 @@ public class AudioPlayer {
 
     public void pause() {
         mPlayer.pause();
+        point = mPlayer.getCurrentPosition();
+
     }
 
 }
